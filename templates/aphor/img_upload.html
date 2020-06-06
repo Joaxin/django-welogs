@@ -1,0 +1,146 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/upload.css' %}">
+
+<div class="file-button" id="upload_image"
+     style="background-image: url('{% static 'images/add.png' %}');background-repeat: no-repeat;background-size: 64px;background-position: center">
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %}
+           value="{{ widget.value|stringformat:'s' }}"{% endif %} onchange="uploadImage(this)"
+           id="id_imageUpload" accept="image/jpeg,image/jpg,image/png,image/gif" multiple>
+</div>
+
+{#显示大图#}
+<div id="outerdiv"
+     style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:10000;width:100%;height:100%;display:none;">
+    <div id="innerdiv" style="position:absolute;">
+        <img id="bigimg" style="border:5px solid #fff;" src="" alt="大图"/>
+    </div>
+</div>
+{#引入jquery#}
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+    var image_list = [];
+    var csrftoken = $.cookie('csrftoken');
+
+    //删除选中的图片,不能使用click，因为动态添加的不能绑定click
+    function delete_img(e) {
+        image_list.splice($.inArray($(e).closest('.selected-img').children("img").attr("src"), image_list), 1);//移除缩略图
+        $("#images_list").val(image_list.join(','));
+        $(e).closest('.selected-img').remove();
+    }
+
+    function uploadImage(obj) {
+        var formData = new FormData();
+        var files = $("#id_imageUpload")[0].files;
+        //如果图片数目大于9，弹出警告
+        if (files.length > 9) {
+            alert("最多选择9张图片！");
+            return;
+        }
+        //检查图片数目和图片类型
+        if (0 < files.length && files.length < 5) {
+            for (i = 0; i < files.length; i++) {
+                var ext = files[i].name.slice(files[i].name.lastIndexOf(".") + 1).toLowerCase();
+                if ("png" == ext || "jpg" == ext || "jpeg" == ext || "gif" == ext) {
+                    formData.append(files[i].name, files[i]);
+                }
+            }
+        }
+
+        if (formData) {
+            //必须加上csrftoken ，否则验证不通过，ajax请求无效
+            $.ajax({
+                url: '{% url 'aphor:upload_temp_images' %}',
+                dataType: 'json',// 返回值类型 一般设置为json
+                type: 'POST',
+                headers: {"X-CSRFToken": csrftoken},//django默认拒绝post请求，必须加 csrftoken，否则请求被屏蔽
+                processData: false,    // 告诉jQuery不要去处理发送的数据
+                contentType: false, //告诉jQuery不检查类型
+                data: formData,
+                async: false,
+                success: function (data) {
+
+                    //console.log(data["image_list"])
+                    //显示上传的图片
+                    for (i = 0; i < data["image_list"].length; i++) {
+                        //console.log(data["image_list"][i])
+                        $("#upload_image").before("<div class=\"selected-img\">\n" +
+                            "    <i class=\"iconfont icon-delete\" style=\"z-index: 999;background-color:rgba(255,255,255,.8);position: absolute;right: 3px;top: 3px;\" title=\"删除图片\" onclick=\"delete_img(this)\"></i>\n" +
+                            "    <img src=\"" + data["image_list"][i] + "\" alt=\"待选图片\" style=\"width: 160px;height: 100px;border-radius: 10px;\" onclick=\"show_big_img(this)\">\n" +
+                            "</div>");
+                        //保存返回的图片URL到列表中
+                        var index = $.inArray(data["image_list"][i], image_list);
+                        if (index < 0) {
+                            image_list.push(data["image_list"][i])
+                        }
+                    }
+                    var list = image_list.join(',');　　//list是以,分割的字符串
+                    //console.log( $("#images_list"));
+                    $("#images_list").val(list);
+                    alert("上传成功", data["msg"]);
+                },
+                error: function (error) {
+                    alert("服务器异常");
+                }
+            })
+        }
+        return false;
+    }
+</script>
+{#显示模型中保存的图片#}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var model_image_list = $("#images_list").val().split(",");
+       //如果$("#images_list").val()为空，会返回一个"None"字符串
+        if (model_image_list.length > 1) {
+            for (i = 0; i < model_image_list.length; i++) {
+                $("#upload_image").before("<div class=\"selected-img\">\n" +
+                    "    <i class=\"iconfont icon-delete\" style=\"z-index: 999;background-color:rgba(255,255,255,.8);position: absolute;right: 3px;top: 3px;\" title=\"删除图片\" onclick=\"delete_img(this)\"></i>\n" +
+                    "    <img src=\"" + model_image_list[i].replace("'", '').replace("'", '') + "\" alt=\"待选图片\" style=\"width: 160px;height: 100px;border-radius: 10px;\" onclick=\"show_big_img(this)\">\n" +
+                    "</div>");
+            }
+        }
+    })
+</script>
+{#显示大图#}
+<script type="text/javascript">
+    //因为图片是动态添加的，所以不能使用选择器选择。
+    function show_big_img(obj) {
+        imgShow("#outerdiv", "#innerdiv", "#bigimg", obj);
+    }
+
+    function imgShow(outerdiv, innerdiv, bigimg, obj) {
+        var src = obj.src;//获取当前点击的pimg元素中的src属性
+        $(bigimg).attr("src", src);//设置#bigimg元素的src属性
+        var windowW = $(window).width();//获取当前窗口宽度
+        var windowH = $(window).height();//获取当前窗口高度
+        var realWidth = obj.naturalWidth;//获取图片真实宽度
+        var realHeight = obj.naturalHeight;//获取图片真实高度
+        var imgWidth, imgHeight;
+        var scale = 0.8;//缩放尺寸，当图片真实宽度和高度大于窗口宽度和高度时进行缩放
+
+        if (realHeight > windowH * scale) {//判断图片高度
+            imgHeight = windowH * scale;//如大于窗口高度，图片高度进行缩放
+            imgWidth = imgHeight / realHeight * realWidth;//等比例缩放宽度
+            if (imgWidth > windowW * scale) {//如宽度扔大于窗口宽度
+                imgWidth = windowW * scale;//再对宽度进行缩放
+            }
+        } else if (realWidth > windowW * scale) {//如图片高度合适，判断图片宽度
+            imgWidth = windowW * scale;//如大于窗口宽度，图片宽度进行缩放
+            imgHeight = imgWidth / realWidth * realHeight;//等比例缩放高度
+        } else {//如果图片真实高度和宽度都符合要求，高宽不变
+            imgWidth = realWidth;
+            imgHeight = realHeight;
+        }
+        $(bigimg).css("width", imgWidth);//以最终的宽度对图片缩放
+        var w = (windowW - imgWidth) / 2;//计算图片与窗口左边距
+        var h = (windowH - imgHeight) / 2;//计算图片与窗口上边距
+        $(innerdiv).css({"top": h, "left": w});//设置#innerdiv的top和left属性
+        $(outerdiv).fadeIn("fast");//淡入显示#outerdiv及.pimg
+
+        $(outerdiv).click(function () {//再次点击淡出消失弹出层
+            $(this).fadeOut("fast");
+        });
+    }
+
+</script>

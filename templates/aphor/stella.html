@@ -1,0 +1,173 @@
+{% extends "stella_base.html" %}
+{% load i18n %}
+{% load static %}
+{% load stella_tags %}
+<title>{% block title %}物识{% endblock title %}</title>
+{% block css %}
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-1">
+        <ul class="menu">
+              <li class="menu-item">
+                  <a class="menu-link active">
+                      <i class="fas fa-cat"></i>
+                  </a>
+              </li>
+  
+              <li class="menu-item">
+                  <a class="menu-link" href="{% url 'aphor:mainpage' %}">
+                          <i class="fas fa-home"></i>
+                  </a>
+              </li>
+              <li class="menu-item">
+                  <a class="menu-link">
+                          <i class="fas fa-hashtag"></i>
+                  </a>
+              </li>
+              <li class="menu-item">
+                      <a class="menu-link">
+                          <i class="fas fa-bell"></i>
+                      </a>
+              </li>
+              <li class="menu-item">
+                      <a class="menu-link">
+                          <i class="fas fa-envelope"></i>
+                      </a>
+              </li>
+              <li class="menu-item">
+                      <a class="menu-link">
+                          <i class="fas fa-bookmark"></i>
+                      </a>
+              </li>
+              <li class="menu-item">
+                      <a class="menu-link">
+                          <i class="fas fa-cat"></i>
+                      </a>
+              </li>
+              <li class="menu-item">
+                  <a class="menu-link">
+                          <i class="fas fa-sticky-note"></i>
+                  </a>
+              </li>
+  
+  
+              <li class="menu-item">
+                  <a class="menu-link" href="#">
+                      <img class="user-img-30" alt="" src="{{user.avatar.url}}">
+                  </a>
+              
+                  <div class="box">
+                      <img src="{{user.avatar.url}}" alt="" class="user-img-40">
+                      <p class="name">David smith</p>
+                      <p class="username">@davidsmith</p>
+                       <div class="bio">Front-end web developer</div>
+                          <div class="folow">
+                              <a href="#"><span>83</span> Following</a>
+                              <a href="#"><span>83</span> Followers</a>
+                           </div>
+                  </div>
+              </li>
+  
+  
+              <li class="menu-item">
+                  <a class="menu-link">
+                      <i class="fas fa-ellipsis-h"></i>
+                  </a>
+              </li>
+  
+              <li class="menu-item ">
+                   <a class="menu-link add-twit">
+                      <i class="fas fa-feather-alt"></i>
+                  </a>
+              </li>
+        </ul>
+       </div>
+          
+    <div class="col-10">
+
+        <div class="write-twit">
+          <img src="{{user.avatar.url}}" alt="" class="user-img-40">
+
+          <div class="form-group">
+          <form action="{% url 'aphor:sendblog' %}" method="POST" class="form" >
+              {% csrf_token %}
+              <textarea name="content" id="" cols="80" rows="3" class="form-control">发生了什么新鲜事?(支持 Markdown 话题 标签 音乐)</textarea>
+
+              <label class="ui-upload">图片
+                <input type="file" style="display: none;" id="chooseImage" name="image">
+              </label>
+
+               <button type="submit" class="btn btn-info col-offset-3">发布</button>
+          </form>{{ form.media }}
+        </div>
+        </div>
+        <div class="card-columns">
+        {% if blogs.object_list %}
+        {% for blog in blogs.object_list %}
+                <div class="card mb-1"> 
+              {% if blogs.images_id  %}
+                  <!-- {% for img in blogs.images.images.all %}
+                  <a href="#"><img class="card-img" src="{{img.url}}" alt="a pic"/>{{img.url}}</a>
+                    {% if not forloop.last %}, {% endif %}
+                  {% endfor %} -->
+                 <p>YES</p>
+              {% endif %}
+                <div class="card-body">
+                    {% if blog.related_topic %}
+                    <h5 class="card-title"><a href="#">{{ blog.related_topic }}</a>
+                    {% else %}
+                    {% endif %}
+                    <div class="card-text">{{ blog.content|custom_markdown }}</div>
+                    <p class="tags">
+                        {% for tag in blog.tags.all %}
+                        <a href="#" class="badge badge-light">
+                            {{ tag.name }}
+                        </a>
+                        {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        </p>
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-between bg-transparent border-top-0">
+                    
+                    <div class="stats">
+                      <div class="btn-group btn-group-toggle">
+                          <a class="button btn views" style="text-align:left;">{{blog.t_publish|date:'Y/m/d h:m:s'}} </a>
+                          <a class="button btn">赞</a>
+                          <a class="button btn">评论</a>
+                          <a class="button btn">收藏</a>
+                          <a class="button btn"><i class="far fa-eye"></i> {{blog.num_click }}</a>
+                      </div>
+                        
+                        <!-- <i class="far fa-comment"></i> 12 -->
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
+        </div>
+            {% else %}
+            <div>{{blogs }}</div>
+            <p>!{% trans "Nothing Here." %} </p>
+            {% endif %}
+        {% include 'pagination.html' with page=blogs %}
+    </div>
+    </div>
+ {% endblock content %}
+ {% block js %}
+ <script>
+    $(function () {
+        $('#chooseImage').on('change', function () {
+            var filePath = $(this).val(),         //获取到input的value，里面是文件的路径
+                fileFormat = filePath.substring(filePath.lastIndexOf(".")).toLowerCase(),
+                src = window.URL.createObjectURL(this.files[0]); //转成可以在本地预览的格式
+            // 检查是否是图片
+            if (!fileFormat.match(/.png|.jpg|.jpeg|.gif/)) {
+                alert('上传错误,文件格式必须为：png/jpg/jpeg/gif');
+                return;
+            }
+        });
+
+    })
+</script>
+ {% endblock js %}

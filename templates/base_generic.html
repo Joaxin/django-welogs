@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{LANGUAGE_CODE }}">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<title>{% block title %}Skeleton-cat{% endblock title %}</title>
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+
+<!-- Bootstrap CSS -->
+<!-- <link crossorigin="anonymous" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+  href="https://lib.baomitu.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+
+  <!-- fontawesome CSS -->
+  <link rel="stylesheet" href="{% static 'css/all.css' %}" />
+  
+  <!-- website CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  {% block css %}
+  {% endblock %}
+</head>
+
+<body>
+
+
+  <div class="container">
+    {% block content %}
+    {% endblock content %}
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  {% block js %}
+  {% endblock js %}
+<!-- <script crossorigin="anonymous" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh"
+  src="https://lib.baomitu.com/jquery/3.4.1/jquery.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+  src="https://lib.baomitu.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+
+  <!-- 3rd party JS -->
+
+  <!-- Website JS -->
+  <script src="{% static 'js/base.js' %}"></script>
+  
+</body>
+</html>

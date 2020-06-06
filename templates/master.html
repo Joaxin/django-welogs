@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static '/css/bootstrap.css' %}">
+
+    <title>PyQuotes | {% block title %}{% endblock %}</title>
+</head>
+<body>
+
+<!-- container -->
+<div class="container">
+
+    <!-- row -->
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- header -->
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded mt-3 mb-3">
+                    <a class="navbar-brand" href="{% url 'index' %}">PyQuotes</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item {% if '/' == request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'index' %}">Home</a>
+                            </li>
+                            <li class="nav-item {% if 'persons' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'persons' %}">Persons</a>
+                            </li>
+                            <li class="nav-item {% if 'random' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'random' %}">Random</a>
+                            </li>
+                            {% if user.is_authenticated %}
+                            <li class="nav-item {% if 'category' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'create_category' %}">Create Category</a>
+                            </li>
+                            <li class="nav-item {% if 'person' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'create_person' %}">Create Person</a>
+                            </li>
+                            <li class="nav-item {% if 'quote' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'create_quote' %}">Create Quote</a>
+                            </li>
+                            {% endif %} 
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <!-- /header -->
+
+        </div>
+    </div>
+    <!-- /row -->
+
+    <!-- row -->
+    <div class="row">
+
+        <!-- col-md-4 -->
+        <div class="col-md-4">
+
+            <!-- Login & Logout buttons -->
+            {% if user.is_authenticated %}
+                <a href="{% url "logout" %}" class="btn btn-danger btn-lg btn-block mb-3">Logout</a>
+            {% else %}
+                <a href="{% url "login" %}" class="btn btn-success btn-lg btn-block mb-3">Login</a>
+            {% endif %}
+            <!-- /Login & Logout buttons -->
+
+            <!-- Persons -->
+            <div class="card text-white bg-secondary mb-3" id="persons">
+                <div class="card-header"><strong>Persons</strong></div>
+                <div class="card-body">
+                    <ul class="card-text">
+                        {% for person in persons_widget %}
+                            <li><a class="text-light" href="{% url 'quotes_by_person' person.pk %}"
+                                   title="{{ person }}">{{ person }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <!-- /Persons -->
+
+            <!-- Categories -->
+            <div class="card text-white bg-dark mb-3" id="categories">
+                <div class="card-header"><strong>Categories</strong></div>
+                <div class="card-body">
+                    <ul class="card-text">
+                        {% for category in categories_widget %}
+                            <li><a class="text-light"
+                                   href="{% url 'quotes_by_category' category.pk %}">{{ category }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <!-- /Categories -->
+
+        </div>
+        <!-- /col-md-4 -->
+
+        <!-- col-md-8 -->
+        <div class="col-md-8">
+
+            {% block content %}
+
+            {% endblock %}
+
+            {% if page_obj.paginator.num_pages > 0 %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        {% endif %}
+
+                        <li class="page-item disabled">
+                            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        </li>
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="{{ request.path }}?page={{ page_obj.next_page_number }}">Next</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            {% endif %}
+
+        </div>
+        <!-- /col-md-8 -->
+
+    </div>
+    <!-- /row -->
+
+    <!-- row -->
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- Master-Footer -->
+            <footer class="navbar navbar-expand-lg navbar-dark bg-dark rounded mt-3 mb-3 text-white" id="master-footer">
+                <strong>
+                    Powered By <a class="text-light" href="https://github.com/mavenium/PyQuotes" title="PyQuotes">PyQuotes</a>
+                </strong>
+            </footer>
+            <!-- /Master-Footer -->
+
+        </div>
+    </div>
+    <!-- /row -->
+
+</div>
+<!-- /container -->
+
+<!-- JavaScript -->
+<script src="{% static '/js/jquery.min.js' %}"></script>
+<script src="{% static '/js/bootstrap.bundle.min.js' %}"></script>
+<!-- /JavaScript -->
+
+</body>
+</html>

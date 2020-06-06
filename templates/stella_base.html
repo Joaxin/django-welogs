@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+{% load stella_tags %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{LANGUAGE_CODE }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <title>{% block title %}Skeleton-cat{% endblock title %}</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+
+    <!-- fontawesome CSS -->
+    <link rel="stylesheet" href="{% static 'css/all.css' %}" />
+    
+    <!-- website CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/montserrat.css' %}" rel="stylesheet" type="text/css" />
+    {% block css %}
+    {% endblock %}
+</head>
+
+<body>
+    
+  {% include 'base_nav.html'%}
+  <div class="container">
+    {% block content %}
+    {% endblock content %}
+  </div>
+
+
+  <!-- Bootstrap JS -->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cplayer/dist/cplayer.min.js"></script>
+  {% block js %}
+  {% endblock js %}
+  <script src="{% static 'js/base.js' %}"></script>
+</body>
+</html>

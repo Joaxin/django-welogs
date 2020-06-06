@@ -1,0 +1,23 @@
+{% extends 'master.html' %}
+
+{% block title %}
+    {{ super }} Index
+{% endblock %}
+
+{% block content %}
+    {% for quotes in quotes_object_list %}
+        <div class="card mb-3">
+        <div class="card-header">
+            <strong>{{ quotes.person }}</strong>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ quotes.content }}</p>
+        </div>
+        <div class="card-footer text-muted">
+        {% for cat in quotes.category.all %}
+            <span class="badge badge-secondary">{{ cat }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+{% endblock %}

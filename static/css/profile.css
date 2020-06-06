@@ -1,0 +1,233 @@
+/*———————————————————————————————模态框——————————————————————————————————*/
+/*直接设置img的宽高是没有效果的，但是可以在父盒子上（即.box）设置；*/
+.img-container {
+    display: block;
+    width: 568px;
+}
+
+#uploadPreview {
+    width: 100%;
+}
+
+.modal-footer .btn-primary {
+    background-color: #00afc6;
+    border-color: transparent;
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: #0093a6;
+    border-color: transparent;
+}
+
+/*———————————————————————————————个人信息—————————————————————————————————*/
+.contentbg {
+    background: #fff;
+    margin: 50px auto;
+    top: 110px;
+    bottom: 0;
+    padding: 0 20px;
+
+}
+
+.accountbg {
+    max-width: 500px;
+    min-height: 440px;
+    border-style: solid;
+    border-width: 0.5px;
+    border-color: #cccccc;
+    /*根据父级标签水平居中*/
+    margin: 0 auto;
+
+    position: relative;
+    top: 100px;
+
+    padding: 10px 30px;
+    /*作用于子标签全部水平居中*/
+    text-align: center;
+}
+
+.accountbg h2 {
+    color: #0097ab;
+}
+
+.list-group {
+    margin: 0 auto;
+    min-height: 300px;
+    max-width: 350px;
+}
+
+/*————————————————————头像————————————————————————*/
+.accountbg img {
+    width: 100px;
+    height: 100px;
+    float: left;
+    top: 0;
+}
+
+.circle {
+    /*水平居中*/
+    margin: 25px auto 25px auto;
+    /*作用于子标签*/
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    /*圆形*/
+    width: 100px;
+    height: 100px;
+
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+
+/*经过头像改变文字样式*/
+.circle:hover .uploadhead {
+    display: block;
+    color: #fff;
+
+}
+
+.uploadhead {
+    /*浮动*/
+    position: absolute;
+    bottom: 0;
+    width: 100px;
+    height: 35px;
+    background-color: #000;
+    opacity: 0.7;
+    color: #fff;
+    font-size: 14px;
+    line-height: 30px;
+    display: none;
+}
+
+.uploadhead input {
+    position: absolute;
+    top: 0;
+    opacity: 0;
+}
+
+.list-profile {
+    margin: 6px 0;
+    font-size: 17px;
+    line-height: 32px;
+    padding-left: 35px;
+}
+
+.profile-heard {
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+#editorlink a,
+.verified {
+    color: #b6b6b6;
+    font-size: 13px;
+}
+
+#editorlink a:hover {
+    color: #0097ab;
+}
+
+.secondaryAction {
+    height: 22px;
+    padding: 0 4px;
+    color: #b6b6b6;
+    font-size: 13px;
+    border: 0px;
+    background-color: transparent;
+    line-height: 22px;
+}
+
+.secondaryAction:hover {
+    color: #0097ab;
+    background-color: #e7fcff;
+}
+
+/*————————————————————个人网页信息样式————————————————————————*/
+
+#filloutlink a {
+    color: #b6b6b6;
+    font-size: 14px;
+
+}
+
+#filloutlink a:hover {
+    color: #0097ab;
+    background-color: #e7fcff;
+}
+
+.submitlink {
+    font-size: 14px;
+    display: none;
+}
+
+.submitlink input {
+    width: 150px;
+    height: 26px;
+}
+
+.submitlink button {
+    margin-bottom: 2px;
+    width: 42px;
+    height: 30px;
+    padding: 3px 6px;
+    background-color: #00afc6;
+    color: #fff;
+}
+
+.submitlink button:hover {
+    background-color: #0093a6;
+    color: #fff;
+}
+
+.usercontrol {
+    margin-top: 25px;
+}
+
+.usercontrol a {
+    font-size: 13px;
+    padding: 6px 8px;
+    margin: 0 10px;
+    background-color: #00afc6;
+    color: #fff;
+    border-color: transparent;
+
+    position: relative;
+    overflow: hidden;
+}
+
+/*抹掉a点击不变色*/
+.usercontrol a:link {
+    color: #fff;
+}
+
+.usercontrol a:hover {
+    background-color: #0093a6;
+    color: #fff;
+}
+
+/*————————————————————css3实现水纹点击————————————————————————*/
+.usercontrol a:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #666 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform .3s, opacity .5s;
+}
+
+.usercontrol a:active:after {
+    transform: scale(0, 0);
+    opacity: .3;
+    transition: 0s;
+}
+</style>

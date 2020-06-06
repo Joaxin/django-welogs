@@ -1,0 +1,26 @@
+Django>=2.2.5
+django-allauth>=0.42.0
+django-crispy-forms>=1.9.1
+django-debug-toolbar>=2.2
+django-simpleui>=4.0.2
+djangorestframework>=3.11.0
+django-taggit>=1.3.0
+django-hreflang>=2.2
+markdown>=3.2.1
+django-filter>=2.2.0
+django-taggit-serializer>=0.1.7
+awesome-slugify>=1.6.5
+pillow>=7.1.2
+django-imagekit>=4.0.2 
+django-rosetta>=0.9.4
+django-hreflang>=2.2
+django-markdownx>=3.0.1
+django-simple-captcha>=0.5.12
+django-filebrowser>=3.13.1
+# django-grappelli-2.14.2
+
+
+
+
+
+
